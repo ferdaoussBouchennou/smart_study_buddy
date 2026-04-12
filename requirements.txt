@@ -2,7 +2,8 @@ langchain
 langchain-groq
 langchain-community
 chromadb
-pypdf2
+pypdf
 streamlit
 python-dotenv
 sentence-transformers
+torchvision
