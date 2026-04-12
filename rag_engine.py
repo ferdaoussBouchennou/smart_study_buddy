@@ -77,15 +77,10 @@ class RAGEngine:
         # texte → vecteur → stockage dans ChromaDB
         print("   Creating embeddings (this may take a minute)...")
         
-        # Supprimer l'ancienne DB si elle existe
-        import shutil
-        if os.path.exists("./study_db"):
-            shutil.rmtree("./study_db")
-        
+        # Create vector database in memory (ephemeral)
         self.vector_db = Chroma.from_documents(
             documents=chunks,
-            embedding=self.embeddings,
-            persist_directory="./study_db"
+            embedding=self.embeddings
         )
         
         self.is_loaded = True

@@ -38,19 +38,22 @@ st.markdown("""
 # ════════════════════════════════════════
 # INITIALISATION SESSION STATE
 # ════════════════════════════════════════
-@st.cache_resource
 def init_engines():
     """
-    Initialise les moteurs une seule fois
-    (cache_resource évite de réinitialiser à chaque interaction)
+    Initialise les moteurs pour CHAQUE utilisateur indépendamment
+    (stocké dans session_state pour éviter les conflits multi-utilisateurs)
     """
-    return (
-        RAGEngine(),
-        QuizGenerator(),
-        ProgressTracker()
-    )
+    if "rag" not in st.session_state:
+        st.session_state.rag = RAGEngine()
+    if "quiz_gen" not in st.session_state:
+        st.session_state.quiz_gen = QuizGenerator()
+    if "tracker" not in st.session_state:
+        st.session_state.tracker = ProgressTracker()
 
-rag, quiz_gen, tracker = init_engines()
+init_engines()
+rag = st.session_state.rag
+quiz_gen = st.session_state.quiz_gen
+tracker = st.session_state.tracker
 
 # Variables de session
 defaults = {
