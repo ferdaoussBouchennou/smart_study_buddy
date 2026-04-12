@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environnements virtuels
+venv/
+env/
+.env_venv/
+.venv/
+ENV/
+
+# Variables d'environnement / Secrets (TRÈS IMPORTANT)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.pem
+
+# Base de données (ChromaDB)
+study_db/
+sqlite3.db
+
+# Fichiers Streamlit générés
+.streamlit/
+# .streamlit/secrets.toml  (si vous l'utilisez en local)
+
+# Fichiers OS
+.DS_Store
+Thumbs.db
