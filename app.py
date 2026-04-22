@@ -265,16 +265,6 @@ else:
                 else:
                     with st.chat_message("assistant"):
                         st.write(msg["content"])
-                        # Afficher les sources si disponibles
-                        if "sources" in msg and msg["sources"]:
-                            with st.expander("Sources"):
-                                for i, src in enumerate(
-                                    msg["sources"]
-                                ):
-                                    st.caption(
-                                        f"Excerpt {i+1}: "
-                                        f"{src.page_content[:200]}..."
-                                    )
         
         # Input question
         question = st.chat_input(
@@ -295,27 +285,13 @@ else:
                         )
                     
                     st.write(answer)
-                    
-                    if sources:
-                        with st.expander("Sources from your course"):
-                            for i, src in enumerate(sources):
-                                st.caption(
-                                    f"**Excerpt {i+1}** "
-                                    f"(Page {src.metadata.get('page', 'N/A')}):"
-                                )
-                                st.write(src.page_content[:300] + "...")
-                                st.divider()
             
             # Sauvegarder dans l'historique
             st.session_state.chat_history.append(
                 {"role": "user", "content": question}
             )
             st.session_state.chat_history.append(
-                {
-                    "role": "assistant",
-                    "content": answer,
-                    "sources": sources
-                }
+                {"role": "assistant", "content": answer}
             )
         
         # Bouton clear chat
@@ -578,31 +554,65 @@ else:
     # ══════════════════════════════════════
     with tab3:
         st.header(" Course Summary")
-        
-        st.write(
-            "Generate a complete summary of your uploaded course."
+
+        st.markdown(
+            "Generate a **complete, professor-style summary** of your course — "
+            "including topics, definitions, formulas, examples and exam tips."
         )
-        
-        if st.button(
-            " Generate Summary",
-            type="primary",
-            use_container_width=True
-        ):
-            with st.spinner("Creating your summary..."):
-                summary = rag.get_summary(language)
-            
-            st.markdown("---")
-            st.markdown(summary)
-            st.markdown("---")
-            
-            # Bouton télécharger
-            st.download_button(
-                label="⬇ Download Summary as .txt",
-                data=summary,
-                file_name=f"summary_{subject or 'course'}.txt",
-                mime="text/plain",
+
+        # Initialiser le résumé dans session_state
+        if "summary_content" not in st.session_state:
+            st.session_state.summary_content = None
+
+        col_btn, col_clear = st.columns([3, 1])
+        with col_btn:
+            generate = st.button(
+                " Generate Full Summary",
+                type="primary",
                 use_container_width=True
             )
+        with col_clear:
+            if st.button(
+                " Clear",
+                use_container_width=True,
+                disabled=st.session_state.summary_content is None
+            ):
+                st.session_state.summary_content = None
+                st.rerun()
+
+        if generate:
+            with st.spinner(
+                "Creating your summary..."
+            ):
+                st.session_state.summary_content = rag.get_summary(language)
+
+        if st.session_state.summary_content:
+            st.divider()
+
+            # Afficher le résumé dans un conteneur stylé
+            with st.container(border=True):
+                st.markdown(st.session_state.summary_content)
+
+            st.divider()
+
+            # Boutons de téléchargement
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button(
+                    label="⬇️ Download as .txt",
+                    data=st.session_state.summary_content,
+                    file_name=f"summary_{subject or 'course'}.txt",
+                    mime="text/plain",
+                    use_container_width=True
+                )
+            with col2:
+                st.download_button(
+                    label="⬇️ Download as .md",
+                    data=st.session_state.summary_content,
+                    file_name=f"summary_{subject or 'course'}.md",
+                    mime="text/markdown",
+                    use_container_width=True
+                )
     
     # ══════════════════════════════════════
     # TAB 4: HISTORIQUE
