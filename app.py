@@ -556,7 +556,7 @@ else:
         st.header(" Course Summary")
 
         st.markdown(
-            "Generate a **complete, professor-style summary** of your course — "
+            "Generate a **complete summary** of your course - "
             "including topics, definitions, formulas, examples and exam tips."
         )
 
@@ -599,7 +599,7 @@ else:
             col1, col2 = st.columns(2)
             with col1:
                 st.download_button(
-                    label="⬇️ Download as .txt",
+                    label="Download as .txt",
                     data=st.session_state.summary_content,
                     file_name=f"summary_{subject or 'course'}.txt",
                     mime="text/plain",
@@ -607,7 +607,7 @@ else:
                 )
             with col2:
                 st.download_button(
-                    label="⬇️ Download as .md",
+                    label="Download as .md",
                     data=st.session_state.summary_content,
                     file_name=f"summary_{subject or 'course'}.md",
                     mime="text/markdown",
